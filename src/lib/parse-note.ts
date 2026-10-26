@@ -12,20 +12,13 @@ function matchHeading(line: string): { key: SectionKey; rest: string } | null {
   const cleaned = line
     .trim()
     .replace(/^#+\s*/, "")
-    .replace(/^\*\*(.+?)\*\*/, "$1")
+    .replace(/\*\*/g, "")
     .trim();
-  // "Heading:" with optional inline content after colon
-  const m = cleaned.match(/^([A-Za-z][A-Za-z\s/-]{1,40}?)\s*[:\-–—]?\s*(.*)$/);
-  if (!m) return null;
-  const [, head, rest] = m;
-  // Only accept "heading: rest" when separated by colon, or bare heading
-  const hasColon = /^[A-Za-z][A-Za-z\s/-]{1,40}?\s*:/.test(cleaned);
-  for (const h of HEADINGS) {
-    if (h.re.test(head.trim())) {
-      if (rest && !hasColon) return null;
-      return { key: h.key, rest: hasColon ? rest : "" };
-    }
-  }
+  if (!cleaned) return null;
+  const idx = cleaned.indexOf(":");
+  const head = (idx >= 0 ? cleaned.slice(0, idx) : cleaned).trim();
+  const rest = idx >= 0 ? cleaned.slice(idx + 1).trim() : "";
+  for (const h of HEADINGS) if (h.re.test(head)) return { key: h.key, rest };
   return null;
 }
 
