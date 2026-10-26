@@ -1,0 +1,3 @@
+CREATE POLICY "Own images select" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'entry-images' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "Own images insert" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'entry-images' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "Own images delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'entry-images' AND (storage.foldername(name))[1] = auth.uid()::text);

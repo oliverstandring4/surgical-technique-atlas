@@ -8,6 +8,13 @@
       "when": 1792977138067,
       "tag": "0000_operative_atlas_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792977153951,
+      "tag": "0001_entry_images_policies",
+      "breakpoints": true
     }
   ]
 }
