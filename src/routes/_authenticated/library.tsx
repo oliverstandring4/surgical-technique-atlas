@@ -159,11 +159,11 @@ function ManageSections({ open, onOpenChange, initialCategory }: { open: boolean
   const list = subsections.filter((s) => s.category_id === cid);
 
   const move = async (s: Subsection, dir: -1 | 1) => {
-    const i = list.findIndex((x) => x.id === s.id);
-    const other = list[i + dir];
-    if (!other) return;
-    await save.mutateAsync({ ...s, position: other.position });
-    await save.mutateAsync({ ...other, position: s.position === other.position ? s.position + dir * -1 : s.position });
+    const arr = [...list];
+    const i = arr.findIndex((x) => x.id === s.id);
+    if (!arr[i + dir]) return;
+    [arr[i], arr[i + dir]] = [arr[i + dir], arr[i]];
+    await Promise.all(arr.map((x, idx) => (x.position !== idx + 1 ? save.mutateAsync({ ...x, position: idx + 1 }) : null)));
   };
 
   return (
