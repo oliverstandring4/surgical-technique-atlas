@@ -14,6 +14,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
+import { Route as AuthenticatedEntriesIdRouteImport } from './routes/_authenticated/entries.$id'
+import { Route as AuthenticatedEntriesNewRouteImport } from './routes/_authenticated/entries.new'
+import { Route as AuthenticatedProceduresKeyRouteImport } from './routes/_authenticated/procedures.$key'
+import { Route as AuthenticatedEntriesIdEditRouteImport } from './routes/_authenticated/entries.$id_.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -39,18 +43,48 @@ const AuthenticatedLibraryRoute = AuthenticatedLibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEntriesIdRoute = AuthenticatedEntriesIdRouteImport.update({
+  id: '/entries/$id',
+  path: '/entries/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEntriesNewRoute = AuthenticatedEntriesNewRouteImport.update({
+  id: '/entries/new',
+  path: '/entries/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProceduresKeyRoute =
+  AuthenticatedProceduresKeyRouteImport.update({
+    id: '/procedures/$key',
+    path: '/procedures/$key',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEntriesIdEditRoute =
+  AuthenticatedEntriesIdEditRouteImport.update({
+    id: '/entries/$id_/edit',
+    path: '/entries/$id/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/library': typeof AuthenticatedLibraryRoute
+  '/entries/$id': typeof AuthenticatedEntriesIdRoute
+  '/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/entries/$id/edit': typeof AuthenticatedEntriesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/library': typeof AuthenticatedLibraryRoute
   '/': typeof AuthenticatedIndexRoute
+  '/entries/$id': typeof AuthenticatedEntriesIdRoute
+  '/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/entries/$id/edit': typeof AuthenticatedEntriesIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +93,32 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/library': typeof AuthenticatedLibraryRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/entries/$id': typeof AuthenticatedEntriesIdRoute
+  '/_authenticated/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/_authenticated/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/_authenticated/entries/$id_/edit': typeof AuthenticatedEntriesIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/library'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/library'
+    | '/entries/$id'
+    | '/entries/new'
+    | '/procedures/$key'
+    | '/entries/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/reset-password' | '/library' | '/'
+  to:
+    | '/auth'
+    | '/reset-password'
+    | '/library'
+    | '/'
+    | '/entries/$id'
+    | '/entries/new'
+    | '/procedures/$key'
+    | '/entries/$id/edit'
   id:
     | '__root__'
     | '/_authenticated'
@@ -72,6 +126,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/library'
     | '/_authenticated/'
+    | '/_authenticated/entries/$id'
+    | '/_authenticated/entries/new'
+    | '/_authenticated/procedures/$key'
+    | '/_authenticated/entries/$id_/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,17 +175,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLibraryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/entries/$id': {
+      id: '/_authenticated/entries/$id'
+      path: '/entries/$id'
+      fullPath: '/entries/$id'
+      preLoaderRoute: typeof AuthenticatedEntriesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/entries/new': {
+      id: '/_authenticated/entries/new'
+      path: '/entries/new'
+      fullPath: '/entries/new'
+      preLoaderRoute: typeof AuthenticatedEntriesNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/procedures/$key': {
+      id: '/_authenticated/procedures/$key'
+      path: '/procedures/$key'
+      fullPath: '/procedures/$key'
+      preLoaderRoute: typeof AuthenticatedProceduresKeyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/entries/$id_/edit': {
+      id: '/_authenticated/entries/$id_/edit'
+      path: '/entries/$id/edit'
+      fullPath: '/entries/$id/edit'
+      preLoaderRoute: typeof AuthenticatedEntriesIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedEntriesIdRoute: typeof AuthenticatedEntriesIdRoute
+  AuthenticatedEntriesNewRoute: typeof AuthenticatedEntriesNewRoute
+  AuthenticatedProceduresKeyRoute: typeof AuthenticatedProceduresKeyRoute
+  AuthenticatedEntriesIdEditRoute: typeof AuthenticatedEntriesIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLibraryRoute: AuthenticatedLibraryRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedEntriesIdRoute: AuthenticatedEntriesIdRoute,
+  AuthenticatedEntriesNewRoute: AuthenticatedEntriesNewRoute,
+  AuthenticatedProceduresKeyRoute: AuthenticatedProceduresKeyRoute,
+  AuthenticatedEntriesIdEditRoute: AuthenticatedEntriesIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
