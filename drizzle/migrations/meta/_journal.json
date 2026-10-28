@@ -15,6 +15,13 @@
       "when": 1792977153951,
       "tag": "0001_entry_images_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793146441641,
+      "tag": "0002_atlas_v2_conditions_operations",
+      "breakpoints": true
     }
   ]
 }
