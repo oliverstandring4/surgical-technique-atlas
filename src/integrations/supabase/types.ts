@@ -44,6 +44,75 @@ export type Database = {
         }
         Relationships: []
       }
+      conditions: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          data: string
+          history_physical: string
+          id: string
+          imaging: string
+          is_shared: boolean
+          labs: string
+          position: number
+          recommendations: string
+          subsection_id: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          data?: string
+          history_physical?: string
+          id?: string
+          imaging?: string
+          is_shared?: boolean
+          labs?: string
+          position?: number
+          recommendations?: string
+          subsection_id?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          data?: string
+          history_physical?: string
+          id?: string
+          imaging?: string
+          is_shared?: boolean
+          labs?: string
+          position?: number
+          recommendations?: string
+          subsection_id?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conditions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conditions_subsection_id_fkey"
+            columns: ["subsection_id"]
+            isOneToOne: false
+            referencedRelation: "subsections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dot_phrases: {
         Row: {
           created_at: string
@@ -162,6 +231,7 @@ export type Database = {
           created_at: string
           id: string
           is_shared: boolean
+          operation_id: string | null
           title: string
           updated_at: string
           user_id: string
@@ -172,6 +242,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_shared?: boolean
+          operation_id?: string | null
           title: string
           updated_at?: string
           user_id?: string
@@ -182,6 +253,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_shared?: boolean
+          operation_id?: string | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -192,6 +264,88 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "op_note_templates_operation_id_fkey"
+            columns: ["operation_id"]
+            isOneToOne: false
+            referencedRelation: "operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operations: {
+        Row: {
+          approach: string | null
+          category_id: string | null
+          condition_ids: string[]
+          created_at: string
+          id: string
+          intra_op: string
+          is_shared: boolean
+          pearls_pitfalls: string
+          position: number
+          post_op: string
+          pre_op: string
+          setup: string
+          subsection_id: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approach?: string | null
+          category_id?: string | null
+          condition_ids?: string[]
+          created_at?: string
+          id?: string
+          intra_op?: string
+          is_shared?: boolean
+          pearls_pitfalls?: string
+          position?: number
+          post_op?: string
+          pre_op?: string
+          setup?: string
+          subsection_id?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          approach?: string | null
+          category_id?: string | null
+          condition_ids?: string[]
+          created_at?: string
+          id?: string
+          intra_op?: string
+          is_shared?: boolean
+          pearls_pitfalls?: string
+          position?: number
+          post_op?: string
+          pre_op?: string
+          setup?: string
+          subsection_id?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operations_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operations_subsection_id_fkey"
+            columns: ["subsection_id"]
+            isOneToOne: false
+            referencedRelation: "subsections"
             referencedColumns: ["id"]
           },
         ]
@@ -260,6 +414,65 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      preference_cards: {
+        Row: {
+          attending: string
+          created_at: string
+          hospital: string
+          id: string
+          instruments: string
+          is_shared: boolean
+          notes: string
+          operation_id: string
+          position: number
+          positioning: string
+          steps: string
+          sutures_drains: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attending?: string
+          created_at?: string
+          hospital?: string
+          id?: string
+          instruments?: string
+          is_shared?: boolean
+          notes?: string
+          operation_id: string
+          position?: number
+          positioning?: string
+          steps?: string
+          sutures_drains?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          attending?: string
+          created_at?: string
+          hospital?: string
+          id?: string
+          instruments?: string
+          is_shared?: boolean
+          notes?: string
+          operation_id?: string
+          position?: number
+          positioning?: string
+          steps?: string
+          sutures_drains?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preference_cards_operation_id_fkey"
+            columns: ["operation_id"]
+            isOneToOne: false
+            referencedRelation: "operations"
             referencedColumns: ["id"]
           },
         ]
