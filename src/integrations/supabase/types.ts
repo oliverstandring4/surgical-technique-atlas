@@ -418,10 +418,53 @@ export type Database = {
           },
         ]
       }
+      popouts: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_shared: boolean
+          parent_id: string
+          parent_type: string
+          position: number
+          section: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_shared?: boolean
+          parent_id: string
+          parent_type: string
+          position?: number
+          section: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_shared?: boolean
+          parent_id?: string
+          parent_type?: string
+          position?: number
+          section?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       preference_cards: {
         Row: {
           attending: string
           created_at: string
+          custom: Json
           hospital: string
           id: string
           instruments: string
@@ -438,6 +481,7 @@ export type Database = {
         Insert: {
           attending?: string
           created_at?: string
+          custom?: Json
           hospital?: string
           id?: string
           instruments?: string
@@ -454,6 +498,7 @@ export type Database = {
         Update: {
           attending?: string
           created_at?: string
+          custom?: Json
           hospital?: string
           id?: string
           instruments?: string
@@ -550,6 +595,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_settings: {
+        Row: {
+          card_fields: Json
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_fields?: Json
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          card_fields?: Json
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
