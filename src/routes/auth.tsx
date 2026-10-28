@@ -39,7 +39,10 @@ function AuthPage() {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success("Check your email for a reset link");
       setMode("signin");
     }
