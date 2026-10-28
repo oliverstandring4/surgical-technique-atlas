@@ -65,7 +65,10 @@ export function EntryForm({ initial, prefill }: { initial?: Entry; prefill?: Par
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!d.title.trim()) return toast.error("Add a case title");
+    if (!d.title.trim()) {
+      toast.error("Add a case title");
+      return;
+    }
     const w = findPhi([d.title, d.attending, d.hospital, tagText, d.indications, d.setup, d.key_steps, d.pearls, d.pitfalls]);
     if (w.length) setWarnings(w);
     else void doSave();
@@ -74,7 +77,10 @@ export function EntryForm({ initial, prefill }: { initial?: Entry; prefill?: Par
   function applyPaste() {
     const parsed = parseFormattedNote(pasteText);
     const keys = Object.keys(parsed) as SectionKey[];
-    if (!keys.length) return toast.error("No headings found (Indications, Setup, Key Steps, Pearls, Pitfalls)");
+    if (!keys.length) {
+      toast.error("No headings found (Indications, Setup, Key Steps, Pearls, Pitfalls)");
+      return;
+    }
     setD((p) => {
       const n = { ...p };
       keys.forEach((k) => (n[k] = plainToHtml(parsed[k]!)));
