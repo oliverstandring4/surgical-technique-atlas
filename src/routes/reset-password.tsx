@@ -23,11 +23,17 @@ function ResetPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) return toast.error("Use at least 8 characters");
+    if (password.length < 8) {
+      toast.error("Use at least 8 characters");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Password saved");
     navigate({ to: "/", replace: true });
   }

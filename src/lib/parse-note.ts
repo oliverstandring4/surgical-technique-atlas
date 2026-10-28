@@ -72,7 +72,7 @@ export function plainToHtml(text: string): string {
         html.push(`<${type}>`);
         list = type;
       }
-      html.push(`<li><p>${esc((bullet ?? num)![1])}</p></li>`);
+      html.push(`<li><p>${esc((bullet ?? num)![1] ?? "")}</p></li>`);
     } else {
       close();
       html.push(`<p>${esc(line)}</p>`);
