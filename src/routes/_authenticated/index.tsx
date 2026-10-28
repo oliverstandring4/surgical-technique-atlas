@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { ClipboardList, Scissors } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ClipboardList, Scissors, Settings2 } from "lucide-react";
+import { ManageCategories } from "@/components/ManageCategories";
+import { Button } from "@/components/ui/button";
 import { useTable } from "@/lib/atlas";
 import { Empty } from "@/components/atlas-ui";
 
@@ -19,6 +21,7 @@ function Home() {
   const subsections = useTable("subsections").data ?? [];
   const operations = useTable("operations").data ?? [];
   const conditions = useTable("conditions").data ?? [];
+  const [catsOpen, setCatsOpen] = useState(false);
 
   const recent = useMemo(
     () =>
@@ -46,14 +49,20 @@ function Home() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <p className="eyebrow">Operative Atlas</p>
-        <h1 className="mt-1 text-4xl">Your atlas</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {operations.length} operation{operations.length === 1 ? "" : "s"} · {conditions.length}{" "}
-          condition{conditions.length === 1 ? "" : "s"}
-        </p>
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="eyebrow">Operative Atlas</p>
+          <h1 className="mt-1 text-4xl">Your atlas</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {operations.length} operation{operations.length === 1 ? "" : "s"} · {conditions.length}{" "}
+            condition{conditions.length === 1 ? "" : "s"}
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setCatsOpen(true)}>
+          <Settings2 /> Edit
+        </Button>
       </div>
+      <ManageCategories open={catsOpen} onOpenChange={setCatsOpen} />
 
       <section className="grid gap-3 sm:grid-cols-2">
         {categories.map((c) => {

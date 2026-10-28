@@ -49,6 +49,7 @@ function SearchPage() {
   const operations = useTable("operations").data ?? [];
   const conditions = useTable("conditions").data ?? [];
   const cards = useTable("preference_cards").data ?? [];
+  const popouts = useTable("popouts").data ?? [];
   const templates = useTable("op_note_templates").data ?? [];
   const phrases = useTable("dot_phrases").data ?? [];
   const links = useTable("saved_links").data ?? [];
@@ -61,15 +62,29 @@ function SearchPage() {
     if (!terms.length) return null;
     const catName = (id: string | null) => categories.find((c) => c.id === id)?.name ?? "";
     const subName = (id: string | null) => subsections.find((s) => s.id === id)?.name ?? "";
+    const popoutText = (parentId: string) =>
+      popouts
+        .filter((p) => p.parent_id === parentId)
+        .map((p) => `${p.title} ${stripHtml(p.body)}`)
+        .join(" ");
     const cardText = (opId: string) =>
       cards
         .filter((c) => c.operation_id === opId)
-        .map((c) => [c.attending, c.hospital, ...CARD_FIELDS.map((f) => c[f.key])].join(" "))
+        .map((c) =>
+          [
+            c.attending,
+            c.hospital,
+            ...CARD_FIELDS.map((f) => c[f.key]),
+            ...Object.values(
+              c.custom && typeof c.custom === "object" && !Array.isArray(c.custom) ? c.custom : {},
+            ).filter((v): v is string => typeof v === "string"),
+          ].join(" "),
+        )
         .join(" ");
     return {
       operations: operations.flatMap((o) => {
         const body = OPERATION_SECTIONS.map((s) => stripHtml(o[s.key])).join(" ");
-        const extra = cardText(o.id);
+        const extra = `${cardText(o.id)} ${popoutText(o.id)}`;
         const hay = [
           o.title,
           o.approach ?? "",
@@ -84,7 +99,7 @@ function SearchPage() {
         return matches(hay, terms) ? [{ o, snip: snippet(`${body} ${extra}`, terms) }] : [];
       }),
       conditions: conditions.flatMap((c) => {
-        const body = CONDITION_SECTIONS.map((s) => stripHtml(c[s.key])).join(" ");
+        const body = `${CONDITION_SECTIONS.map((s) => stripHtml(c[s.key])).join(" ")} ${popoutText(c.id)}`;
         const hay = [
           c.title,
           c.tags.join(" "),
@@ -102,7 +117,18 @@ function SearchPage() {
       phrases: phrases.filter((p) => matches([p.name, p.expansion].join(" ").toLowerCase(), terms)),
       links: links.filter((l) => matches([l.title, l.url, l.note].join(" ").toLowerCase(), terms)),
     };
-  }, [terms, operations, conditions, cards, templates, phrases, links, categories, subsections]);
+  }, [
+    terms,
+    operations,
+    conditions,
+    cards,
+    popouts,
+    templates,
+    phrases,
+    links,
+    categories,
+    subsections,
+  ]);
 
   const total = results ? Object.values(results).reduce((n, r) => n + r.length, 0) : 0;
 

@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
-import { Download, FileJson, LogOut, Upload } from "lucide-react";
+import { Download, FileJson, LogOut, Settings2, Upload } from "lucide-react";
+import { CardFieldsEditor } from "@/components/CardFieldsEditor";
+import { ManageCategories } from "@/components/ManageCategories";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ALL_TABLES, useTable, type TableName } from "@/lib/atlas";
@@ -41,6 +43,7 @@ function SettingsPage() {
   const subsections = useTable("subsections").data ?? [];
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [catsOpen, setCatsOpen] = useState(false);
   const [pending, setPending] = useState<{ tables: Backup["tables"]; name: string } | null>(null);
 
   async function exportJson() {
@@ -119,6 +122,25 @@ function SettingsPage() {
       </Card>
 
       <Card>
+        <p className="eyebrow">Layout</p>
+        <h2 className="mt-1 text-xl">Categories</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Add, rename, reorder or remove the top-level menu (HPB, GI, …).
+        </p>
+        <Button variant="outline" size="sm" className="mt-3" onClick={() => setCatsOpen(true)}>
+          <Settings2 /> Edit categories
+        </Button>
+        <h2 id="card-fields" className="mt-6 scroll-mt-24 text-xl">
+          Preference card fields
+        </h2>
+        <p className="mt-1 mb-3 text-sm text-muted-foreground">
+          The fields on every attending's card. Hiding a field keeps what you already wrote.
+        </p>
+        <CardFieldsEditor />
+      </Card>
+      <ManageCategories open={catsOpen} onOpenChange={setCatsOpen} />
+
+      <Card>
         <p className="eyebrow">Backup</p>
         <h2 className="mt-1 text-xl">Export</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -128,7 +150,9 @@ function SettingsPage() {
           <FileJson /> {busy === "json" ? "Preparing…" : "Export everything (JSON)"}
         </Button>
         <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {ALL_TABLES.filter((t) => t !== "entries" && t !== "order_sets").map((t) => (
+          {ALL_TABLES.filter(
+            (t) => t !== "entries" && t !== "order_sets" && t !== "user_settings",
+          ).map((t) => (
             <Button
               key={t}
               variant="outline"
@@ -198,6 +222,8 @@ function ImportPreview({
     conditions: useTable("conditions").data ?? [],
     operations: useTable("operations").data ?? [],
     preference_cards: useTable("preference_cards").data ?? [],
+    popouts: useTable("popouts").data ?? [],
+    user_settings: useTable("user_settings").data ?? [],
     entries: useTable("entries").data ?? [],
     op_note_templates: useTable("op_note_templates").data ?? [],
     dot_phrases: useTable("dot_phrases").data ?? [],

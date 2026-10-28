@@ -2,6 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Copy, Pencil, Trash2 } from "lucide-react";
 import { OPERATION_SECTIONS, copyText, htmlToText, useRemove, useTable } from "@/lib/atlas";
 import { RichView } from "@/components/RichEditor";
+import { Popouts } from "@/components/Popouts";
+import { supabase } from "@/integrations/supabase/client";
 import { PreferenceCards } from "@/components/PreferenceCards";
 import { Chip, CopyButton, Empty } from "@/components/atlas-ui";
 import { Button } from "@/components/ui/button";
@@ -66,6 +68,7 @@ function OperationView() {
           size="sm"
           onClick={async () => {
             if (!confirm("Delete this operation and its preference cards?")) return;
+            await supabase.from("popouts").delete().eq("parent_id", op.id);
             await remove.mutateAsync(op.id);
             if (sub)
               navigate({
@@ -88,6 +91,7 @@ function OperationView() {
           <section key={s.key} id={`sec-${s.key}`} className="scroll-mt-32">
             <h2 className="mb-2 border-b border-border pb-1.5 text-xl">{s.label}</h2>
             <RichView html={op[s.key]} />
+            <Popouts parentType="operation" parentId={op.id} section={s.key} />
           </section>
         ))}
         <section id="sec-cards" className="scroll-mt-32">

@@ -2,6 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Copy, Pencil, Plus, Trash2 } from "lucide-react";
 import { CONDITION_SECTIONS, copyText, htmlToText, useRemove, useTable } from "@/lib/atlas";
 import { RichView } from "@/components/RichEditor";
+import { Popouts } from "@/components/Popouts";
+import { supabase } from "@/integrations/supabase/client";
 import { Chip, Empty } from "@/components/atlas-ui";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, JumpNav } from "@/components/item-nav";
@@ -57,6 +59,7 @@ function ConditionView() {
           size="sm"
           onClick={async () => {
             if (!confirm("Delete this condition?")) return;
+            await supabase.from("popouts").delete().eq("parent_id", c.id);
             await remove.mutateAsync(c.id);
             if (sub)
               navigate({
@@ -84,6 +87,7 @@ function ConditionView() {
           <section key={s.key} id={`sec-${s.key}`} className="scroll-mt-32">
             <h2 className="mb-2 border-b border-border pb-1.5 text-xl">{s.label}</h2>
             <RichView html={c[s.key]} />
+            <Popouts parentType="condition" parentId={c.id} section={s.key} />
           </section>
         ))}
         <section id="sec-ops" className="scroll-mt-32">
