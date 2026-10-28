@@ -11,7 +11,10 @@ export type TableName =
   | "op_note_templates"
   | "dot_phrases"
   | "order_sets"
-  | "saved_links";
+  | "saved_links"
+  | "conditions"
+  | "operations"
+  | "preference_cards";
 export type Row<T extends TableName> = Tables[T]["Row"];
 export type Insert<T extends TableName> = Tables[T]["Insert"];
 
@@ -22,19 +25,79 @@ export type OpTemplate = Row<"op_note_templates">;
 export type DotPhrase = Row<"dot_phrases">;
 export type OrderSet = Row<"order_sets">;
 export type SavedLink = Row<"saved_links">;
+export type Condition = Row<"conditions">;
+export type Operation = Row<"operations">;
+export type PreferenceCard = Row<"preference_cards">;
 
 export const ALL_TABLES: TableName[] = [
   "categories",
   "subsections",
-  "entries",
+  "conditions",
+  "operations",
+  "preference_cards",
   "op_note_templates",
   "dot_phrases",
-  "order_sets",
   "saved_links",
+  // Legacy (v1) tables: kept so old data is still backed up
+  "entries",
+  "order_sets",
 ];
 
+export const CONDITION_SECTIONS = [
+  {
+    key: "history_physical",
+    label: "History & physical",
+    hint: "Presentation, risk factors, exam findings",
+  },
+  { key: "labs", label: "Labs", hint: "Tumor markers, hormone panels, genetics" },
+  { key: "imaging", label: "Imaging", hint: "Modalities, protocols, what to look for" },
+  { key: "data", label: "Data", hint: "Key trials, guidelines, staging, outcomes" },
+  {
+    key: "recommendations",
+    label: "Recommendations",
+    hint: "Algorithm, indications for surgery, surveillance",
+  },
+] as const;
+
+export const OPERATION_SECTIONS = [
+  { key: "pre_op", label: "Pre-op", hint: "Indications, workup, optimization, consent points" },
+  {
+    key: "setup",
+    label: "Setup",
+    hint: "Positioning, room setup, ports and incisions, equipment. Add photos or diagrams.",
+  },
+  { key: "intra_op", label: "Intra-op", hint: "Key steps in order" },
+  { key: "pearls_pitfalls", label: "Pearls & pitfalls", hint: "" },
+  {
+    key: "post_op",
+    label: "Post-op / ERAS",
+    hint: "Diet, drains, labs, VTE prophylaxis, pain, ERAS pathway, activity, discharge criteria",
+  },
+] as const;
+
+export const CARD_FIELDS = [
+  { key: "positioning", label: "Positioning & setup" },
+  { key: "instruments", label: "Instruments, energy & staplers" },
+  { key: "sutures_drains", label: "Sutures & drains" },
+  { key: "steps", label: "How they do it differently" },
+  { key: "notes", label: "Other notes" },
+] as const;
+
 export const APPROACHES = ["open", "laparoscopic", "robotic", "hybrid"] as const;
-export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export const ENTRY_SECTIONS = [
   { key: "indications", label: "Indications", hint: "" },
@@ -65,13 +128,16 @@ export function procedureKey(title: string) {
 
 export function performedLabel(e: Pick<Entry, "performed_month" | "performed_year">) {
   if (!e.performed_year) return "";
-  return e.performed_month ? `${MONTHS[e.performed_month - 1]} ${e.performed_year}` : `${e.performed_year}`;
+  return e.performed_month
+    ? `${MONTHS[e.performed_month - 1]} ${e.performed_year}`
+    : `${e.performed_year}`;
 }
 
 const ORDER: Partial<Record<TableName, { col: string; asc: boolean }>> = {
   categories: { col: "position", asc: true },
   subsections: { col: "position", asc: true },
   saved_links: { col: "position", asc: true },
+  preference_cards: { col: "position", asc: true },
 };
 
 export function useTable<T extends TableName>(table: T) {
