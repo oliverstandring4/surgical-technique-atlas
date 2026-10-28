@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Pencil, Plus, Settings2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { CARD_FIELDS, useRemove, useSave, useTable, type PreferenceCard } from "@/lib/atlas";
+import { useRemove, useSave, useTable, type PreferenceCard } from "@/lib/atlas";
+import { cardValue, useCardFields, type CardField } from "@/lib/card-fields";
 import { phiConfirm } from "@/lib/phi-confirm";
 import { CopyButton, Empty, Field } from "./atlas-ui";
 import { Button } from "@/components/ui/button";
@@ -13,28 +15,46 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-type FieldKey = (typeof CARD_FIELDS)[number]["key"];
-type Draft = { id?: string; attending: string; hospital: string; position?: number } & Record<
-  FieldKey,
-  string
->;
+type Draft = {
+  id?: string;
+  attending: string;
+  hospital: string;
+  position?: number;
+  values: Record<string, string>;
+  /** Existing custom values, kept so hidden/removed fields aren't lost. */
+  custom: Record<string, unknown>;
+};
 
-const blank = (): Draft => ({
-  attending: "",
-  hospital: "",
-  ...(Object.fromEntries(CARD_FIELDS.map((f) => [f.key, ""])) as Record<FieldKey, string>),
-});
+const blank = (): Draft => ({ attending: "", hospital: "", values: {}, custom: {} });
+
+function customOf(c: PreferenceCard): Record<string, unknown> {
+  return c.custom && typeof c.custom === "object" && !Array.isArray(c.custom)
+    ? (c.custom as Record<string, unknown>)
+    : {};
+}
+
+function toDraft(c: PreferenceCard, fields: CardField[]): Draft {
+  return {
+    id: c.id,
+    attending: c.attending,
+    hospital: c.hospital,
+    position: c.position,
+    values: Object.fromEntries(fields.map((f) => [f.key, cardValue(c, f)])),
+    custom: customOf(c),
+  };
+}
 
 export function attendingName(name: string) {
   const n = name.trim().replace(/^dr\.?\s*/i, "");
   return n ? `Dr. ${n}` : "Unnamed attending";
 }
 
-export function cardText(title: string, c: PreferenceCard) {
+export function cardText(title: string, c: PreferenceCard, fields: CardField[]) {
   const lines = [`${title} | ${attendingName(c.attending)}${c.hospital ? ` (${c.hospital})` : ""}`];
-  for (const f of CARD_FIELDS)
-    if ((c[f.key] ?? "").trim())
-      lines.push(`\n${f.label.toUpperCase()}\n${(c[f.key] ?? "").trim()}`);
+  for (const f of fields) {
+    const v = cardValue(c, f).trim();
+    if (v) lines.push(`\n${f.label.toUpperCase()}\n${v}`);
+  }
   return lines.join("\n");
 }
 
@@ -48,6 +68,7 @@ export function PreferenceCards({
   const cards = (useTable("preference_cards").data ?? []).filter(
     (c) => c.operation_id === operationId,
   );
+  const { visible } = useCardFields();
   const remove = useRemove("preference_cards");
   const [editing, setEditing] = useState<Draft | null>(null);
 
@@ -77,32 +98,20 @@ export function PreferenceCards({
                   <p className="truncate font-serif text-lg">{attendingName(c.attending)}</p>
                   {c.hospital && <p className="text-xs text-muted-foreground">{c.hospital}</p>}
                 </div>
-                <CopyButton text={cardText(operationTitle, c)} />
+                <CopyButton text={cardText(operationTitle, c, visible)} />
               </div>
               <dl className="mt-3 space-y-3">
-                {CARD_FIELDS.filter((f) => (c[f.key] ?? "").trim()).map((f) => (
-                  <div key={f.key}>
-                    <dt className="eyebrow">{f.label}</dt>
-                    <dd className="mt-0.5 whitespace-pre-wrap text-sm">{c[f.key] ?? ""}</dd>
-                  </div>
-                ))}
+                {visible
+                  .filter((f) => cardValue(c, f).trim())
+                  .map((f) => (
+                    <div key={f.key}>
+                      <dt className="eyebrow">{f.label}</dt>
+                      <dd className="mt-0.5 whitespace-pre-wrap text-sm">{cardValue(c, f)}</dd>
+                    </div>
+                  ))}
               </dl>
               <div className="mt-3 flex gap-1 border-t border-border pt-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    setEditing({
-                      id: c.id,
-                      attending: c.attending,
-                      hospital: c.hospital,
-                      position: c.position,
-                      ...(Object.fromEntries(
-                        CARD_FIELDS.map((f) => [f.key, c[f.key] ?? ""]),
-                      ) as Record<FieldKey, string>),
-                    })
-                  }
-                >
+                <Button variant="ghost" size="sm" onClick={() => setEditing(toDraft(c, visible))}>
                   <Pencil /> Edit
                 </Button>
                 <Button
@@ -121,6 +130,7 @@ export function PreferenceCards({
       )}
       <CardDialog
         draft={editing}
+        fields={visible}
         operationId={operationId}
         nextPosition={Math.max(0, ...cards.map((c) => c.position)) + 1}
         onClose={() => setEditing(null)}
@@ -131,11 +141,13 @@ export function PreferenceCards({
 
 function CardDialog({
   draft,
+  fields,
   operationId,
   nextPosition,
   onClose,
 }: {
   draft: Draft | null;
+  fields: CardField[];
   operationId: string;
   nextPosition: number;
   onClose: () => void;
@@ -150,6 +162,8 @@ function CardDialog({
     setOpenFor(draft);
     if (draft) setD(draft);
   }
+  const setValue = (k: string, v: string) =>
+    setD((p) => ({ ...p, values: { ...p.values, [k]: v } }));
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -157,13 +171,24 @@ function CardDialog({
       toast.error("Add the attending's name");
       return;
     }
-    if (!phiConfirm(CARD_FIELDS.map((f) => d[f.key]))) return;
+    if (!phiConfirm(Object.values(d.values))) return;
+    const builtins = Object.fromEntries(
+      fields.filter((f) => f.builtin).map((f) => [f.key, d.values[f.key] ?? ""]),
+    );
+    const custom = {
+      ...d.custom,
+      ...Object.fromEntries(
+        fields.filter((f) => !f.builtin).map((f) => [f.key, d.values[f.key] ?? ""]),
+      ),
+    };
     await save.mutateAsync({
-      ...d,
+      ...(d.id ? { id: d.id } : {}),
       attending: d.attending.trim(),
       hospital: d.hospital.trim(),
       operation_id: operationId,
       position: d.position ?? nextPosition,
+      ...builtins,
+      custom: custom as never,
     });
     toast.success("Saved");
     onClose();
@@ -206,15 +231,23 @@ function CardDialog({
               </datalist>
             </Field>
           </div>
-          {CARD_FIELDS.map((f) => (
+          {fields.map((f) => (
             <Field key={f.key} label={f.label}>
               <textarea
                 className="field min-h-20"
-                value={d[f.key]}
-                onChange={(e) => setD({ ...d, [f.key]: e.target.value })}
+                value={d.values[f.key] ?? ""}
+                onChange={(e) => setValue(f.key, e.target.value)}
               />
             </Field>
           ))}
+          <Link
+            to="/settings"
+            hash="card-fields"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+            onClick={onClose}
+          >
+            <Settings2 size={12} /> Change which fields cards have
+          </Link>
           <DialogFooter>
             <Button type="submit" disabled={save.isPending}>
               {save.isPending ? "Saving…" : "Save"}

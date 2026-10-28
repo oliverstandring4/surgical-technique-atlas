@@ -2,8 +2,21 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
+import { TableKit } from "@tiptap/extension-table";
 import { useRef, useState } from "react";
-import { Bold, Italic, List, ListOrdered, Heading2, ImagePlus, Loader2 } from "lucide-react";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Heading2,
+  ImagePlus,
+  Loader2,
+  Table as TableIcon,
+  Rows3,
+  Columns3,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -13,7 +26,9 @@ async function uploadImage(file: File): Promise<string> {
   if (!u.user) throw new Error("Not signed in");
   const ext = file.name.split(".").pop() || "jpg";
   const path = `${u.user.id}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from("entry-images").upload(path, file, { contentType: file.type });
+  const { error } = await supabase.storage
+    .from("entry-images")
+    .upload(path, file, { contentType: file.type });
   if (error) throw error;
   const { data, error: e2 } = await supabase.storage
     .from("entry-images")
@@ -35,7 +50,13 @@ export function RichEditor({
   const [uploading, setUploading] = useState(false);
   const editor = useEditor({
     immediatelyRender: false,
-    extensions: [StarterKit, Image, Placeholder.configure({ placeholder: placeholder ?? "" })],
+    extensions: [
+      StarterKit,
+      Image,
+      TableKit.configure({ table: { resizable: false } }),
+      Placeholder.configure({ placeholder: placeholder ?? "" }),
+    ],
+    shouldRerenderOnTransaction: true,
     content: value,
     editorProps: { attributes: { class: "prose-atlas px-3 py-2.5" } },
     onUpdate: ({ editor }) => onChange(editor.isEmpty ? "" : editor.getHTML()),
@@ -58,15 +79,87 @@ export function RichEditor({
 
   return (
     <div className="rounded-md border border-input bg-paper focus-within:border-ring">
-      <div className="flex items-center gap-0.5 border-b border-border px-1.5 py-1">
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-1.5 py-1">
         {editor && (
           <>
-            {btn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <Bold size={15} />, "Bold")}
-            {btn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <Italic size={15} />, "Italic")}
-            {btn(editor.isActive("heading"), () => editor.chain().focus().toggleHeading({ level: 3 }).run(), <Heading2 size={15} />, "Heading")}
-            {btn(editor.isActive("bulletList"), () => editor.chain().focus().toggleBulletList().run(), <List size={15} />, "Bullets")}
-            {btn(editor.isActive("orderedList"), () => editor.chain().focus().toggleOrderedList().run(), <ListOrdered size={15} />, "Numbered")}
-            {btn(false, () => fileRef.current?.click(), uploading ? <Loader2 size={15} className="animate-spin" /> : <ImagePlus size={15} />, "Add image")}
+            {btn(
+              editor.isActive("bold"),
+              () => editor.chain().focus().toggleBold().run(),
+              <Bold size={15} />,
+              "Bold",
+            )}
+            {btn(
+              editor.isActive("italic"),
+              () => editor.chain().focus().toggleItalic().run(),
+              <Italic size={15} />,
+              "Italic",
+            )}
+            {btn(
+              editor.isActive("heading"),
+              () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+              <Heading2 size={15} />,
+              "Heading",
+            )}
+            {btn(
+              editor.isActive("bulletList"),
+              () => editor.chain().focus().toggleBulletList().run(),
+              <List size={15} />,
+              "Bullets",
+            )}
+            {btn(
+              editor.isActive("orderedList"),
+              () => editor.chain().focus().toggleOrderedList().run(),
+              <ListOrdered size={15} />,
+              "Numbered",
+            )}
+            {btn(
+              false,
+              () => fileRef.current?.click(),
+              uploading ? <Loader2 size={15} className="animate-spin" /> : <ImagePlus size={15} />,
+              "Add image",
+            )}
+            {btn(
+              false,
+              () =>
+                editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+              <TableIcon size={15} />,
+              "Insert table",
+            )}
+            {editor.isActive("table") && (
+              <>
+                <span className="mx-1 h-4 w-px bg-border" />
+                {btn(
+                  false,
+                  () => editor.chain().focus().addRowAfter().run(),
+                  <Rows3 size={15} />,
+                  "Add row",
+                )}
+                {btn(
+                  false,
+                  () => editor.chain().focus().addColumnAfter().run(),
+                  <Columns3 size={15} />,
+                  "Add column",
+                )}
+                {btn(
+                  false,
+                  () => editor.chain().focus().deleteRow().run(),
+                  <span className="px-0.5 text-[11px] font-medium">−row</span>,
+                  "Delete row",
+                )}
+                {btn(
+                  false,
+                  () => editor.chain().focus().deleteColumn().run(),
+                  <span className="px-0.5 text-[11px] font-medium">−col</span>,
+                  "Delete column",
+                )}
+                {btn(
+                  false,
+                  () => editor.chain().focus().deleteTable().run(),
+                  <Trash2 size={15} />,
+                  "Delete table",
+                )}
+              </>
+            )}
           </>
         )}
         <input
