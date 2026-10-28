@@ -160,6 +160,41 @@
     padding-left: 0.75rem;
     color: var(--color-muted-foreground);
   }
+  & table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 0.6em 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+  }
+  & .tableWrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  & .tableWrapper table {
+    display: table;
+  }
+  & th,
+  & td {
+    border: 1px solid var(--color-border);
+    padding: 0.35rem 0.5rem;
+    vertical-align: top;
+    text-align: left;
+    min-width: 5rem;
+  }
+  & th {
+    background: var(--color-secondary);
+    font-weight: 600;
+  }
+  & th p,
+  & td p {
+    margin: 0;
+  }
+  & .selectedCell {
+    background: var(--color-accent);
+  }
 }
 
 .ProseMirror {
