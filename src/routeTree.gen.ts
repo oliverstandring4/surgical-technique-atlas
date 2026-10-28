@@ -14,10 +14,25 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
+import { Route as AuthenticatedLinksRouteImport } from './routes/_authenticated/links'
+import { Route as AuthenticatedMoreRouteImport } from './routes/_authenticated/more'
+import { Route as AuthenticatedNewRouteImport } from './routes/_authenticated/new'
+import { Route as AuthenticatedPhrasesRouteImport } from './routes/_authenticated/phrases'
+import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
+import { Route as AuthenticatedCategoryIdRouteImport } from './routes/_authenticated/category.$id'
+import { Route as AuthenticatedConditionsIdRouteImport } from './routes/_authenticated/conditions.$id'
+import { Route as AuthenticatedConditionsNewRouteImport } from './routes/_authenticated/conditions.new'
 import { Route as AuthenticatedEntriesIdRouteImport } from './routes/_authenticated/entries.$id'
 import { Route as AuthenticatedEntriesNewRouteImport } from './routes/_authenticated/entries.new'
+import { Route as AuthenticatedOperationsIdRouteImport } from './routes/_authenticated/operations.$id'
+import { Route as AuthenticatedOperationsNewRouteImport } from './routes/_authenticated/operations.new'
 import { Route as AuthenticatedProceduresKeyRouteImport } from './routes/_authenticated/procedures.$key'
+import { Route as AuthenticatedSubIdRouteImport } from './routes/_authenticated/sub.$id'
+import { Route as AuthenticatedConditionsIdEditRouteImport } from './routes/_authenticated/conditions.$id_.edit'
 import { Route as AuthenticatedEntriesIdEditRouteImport } from './routes/_authenticated/entries.$id_.edit'
+import { Route as AuthenticatedOperationsIdEditRouteImport } from './routes/_authenticated/operations.$id_.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -43,6 +58,58 @@ const AuthenticatedLibraryRoute = AuthenticatedLibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLinksRoute = AuthenticatedLinksRouteImport.update({
+  id: '/links',
+  path: '/links',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMoreRoute = AuthenticatedMoreRouteImport.update({
+  id: '/more',
+  path: '/more',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNewRoute = AuthenticatedNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPhrasesRoute = AuthenticatedPhrasesRouteImport.update({
+  id: '/phrases',
+  path: '/phrases',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTemplatesRoute = AuthenticatedTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCategoryIdRoute = AuthenticatedCategoryIdRouteImport.update({
+  id: '/category/$id',
+  path: '/category/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConditionsIdRoute =
+  AuthenticatedConditionsIdRouteImport.update({
+    id: '/conditions/$id',
+    path: '/conditions/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedConditionsNewRoute =
+  AuthenticatedConditionsNewRouteImport.update({
+    id: '/conditions/new',
+    path: '/conditions/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEntriesIdRoute = AuthenticatedEntriesIdRouteImport.update({
   id: '/entries/$id',
   path: '/entries/$id',
@@ -53,10 +120,33 @@ const AuthenticatedEntriesNewRoute = AuthenticatedEntriesNewRouteImport.update({
   path: '/entries/new',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOperationsIdRoute =
+  AuthenticatedOperationsIdRouteImport.update({
+    id: '/operations/$id',
+    path: '/operations/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOperationsNewRoute =
+  AuthenticatedOperationsNewRouteImport.update({
+    id: '/operations/new',
+    path: '/operations/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProceduresKeyRoute =
   AuthenticatedProceduresKeyRouteImport.update({
     id: '/procedures/$key',
     path: '/procedures/$key',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSubIdRoute = AuthenticatedSubIdRouteImport.update({
+  id: '/sub/$id',
+  path: '/sub/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConditionsIdEditRoute =
+  AuthenticatedConditionsIdEditRouteImport.update({
+    id: '/conditions/$id_/edit',
+    path: '/conditions/$id/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedEntriesIdEditRoute =
@@ -65,26 +155,62 @@ const AuthenticatedEntriesIdEditRoute =
     path: '/entries/$id/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedOperationsIdEditRoute =
+  AuthenticatedOperationsIdEditRouteImport.update({
+    id: '/operations/$id_/edit',
+    path: '/operations/$id/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/library': typeof AuthenticatedLibraryRoute
+  '/links': typeof AuthenticatedLinksRoute
+  '/more': typeof AuthenticatedMoreRoute
+  '/new': typeof AuthenticatedNewRoute
+  '/phrases': typeof AuthenticatedPhrasesRoute
+  '/search': typeof AuthenticatedSearchRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
+  '/category/$id': typeof AuthenticatedCategoryIdRoute
+  '/conditions/$id': typeof AuthenticatedConditionsIdRoute
+  '/conditions/new': typeof AuthenticatedConditionsNewRoute
   '/entries/$id': typeof AuthenticatedEntriesIdRoute
   '/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/operations/$id': typeof AuthenticatedOperationsIdRoute
+  '/operations/new': typeof AuthenticatedOperationsNewRoute
   '/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/sub/$id': typeof AuthenticatedSubIdRoute
+  '/conditions/$id/edit': typeof AuthenticatedConditionsIdEditRoute
   '/entries/$id/edit': typeof AuthenticatedEntriesIdEditRoute
+  '/operations/$id/edit': typeof AuthenticatedOperationsIdEditRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/library': typeof AuthenticatedLibraryRoute
+  '/links': typeof AuthenticatedLinksRoute
+  '/more': typeof AuthenticatedMoreRoute
+  '/new': typeof AuthenticatedNewRoute
+  '/phrases': typeof AuthenticatedPhrasesRoute
+  '/search': typeof AuthenticatedSearchRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
   '/': typeof AuthenticatedIndexRoute
+  '/category/$id': typeof AuthenticatedCategoryIdRoute
+  '/conditions/$id': typeof AuthenticatedConditionsIdRoute
+  '/conditions/new': typeof AuthenticatedConditionsNewRoute
   '/entries/$id': typeof AuthenticatedEntriesIdRoute
   '/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/operations/$id': typeof AuthenticatedOperationsIdRoute
+  '/operations/new': typeof AuthenticatedOperationsNewRoute
   '/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/sub/$id': typeof AuthenticatedSubIdRoute
+  '/conditions/$id/edit': typeof AuthenticatedConditionsIdEditRoute
   '/entries/$id/edit': typeof AuthenticatedEntriesIdEditRoute
+  '/operations/$id/edit': typeof AuthenticatedOperationsIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -92,11 +218,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/library': typeof AuthenticatedLibraryRoute
+  '/_authenticated/links': typeof AuthenticatedLinksRoute
+  '/_authenticated/more': typeof AuthenticatedMoreRoute
+  '/_authenticated/new': typeof AuthenticatedNewRoute
+  '/_authenticated/phrases': typeof AuthenticatedPhrasesRoute
+  '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/templates': typeof AuthenticatedTemplatesRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/category/$id': typeof AuthenticatedCategoryIdRoute
+  '/_authenticated/conditions/$id': typeof AuthenticatedConditionsIdRoute
+  '/_authenticated/conditions/new': typeof AuthenticatedConditionsNewRoute
   '/_authenticated/entries/$id': typeof AuthenticatedEntriesIdRoute
   '/_authenticated/entries/new': typeof AuthenticatedEntriesNewRoute
+  '/_authenticated/operations/$id': typeof AuthenticatedOperationsIdRoute
+  '/_authenticated/operations/new': typeof AuthenticatedOperationsNewRoute
   '/_authenticated/procedures/$key': typeof AuthenticatedProceduresKeyRoute
+  '/_authenticated/sub/$id': typeof AuthenticatedSubIdRoute
+  '/_authenticated/conditions/$id_/edit': typeof AuthenticatedConditionsIdEditRoute
   '/_authenticated/entries/$id_/edit': typeof AuthenticatedEntriesIdEditRoute
+  '/_authenticated/operations/$id_/edit': typeof AuthenticatedOperationsIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,31 +246,76 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/library'
+    | '/links'
+    | '/more'
+    | '/new'
+    | '/phrases'
+    | '/search'
+    | '/settings'
+    | '/templates'
+    | '/category/$id'
+    | '/conditions/$id'
+    | '/conditions/new'
     | '/entries/$id'
     | '/entries/new'
+    | '/operations/$id'
+    | '/operations/new'
     | '/procedures/$key'
+    | '/sub/$id'
+    | '/conditions/$id/edit'
     | '/entries/$id/edit'
+    | '/operations/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/reset-password'
     | '/library'
+    | '/links'
+    | '/more'
+    | '/new'
+    | '/phrases'
+    | '/search'
+    | '/settings'
+    | '/templates'
     | '/'
+    | '/category/$id'
+    | '/conditions/$id'
+    | '/conditions/new'
     | '/entries/$id'
     | '/entries/new'
+    | '/operations/$id'
+    | '/operations/new'
     | '/procedures/$key'
+    | '/sub/$id'
+    | '/conditions/$id/edit'
     | '/entries/$id/edit'
+    | '/operations/$id/edit'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
     | '/_authenticated/library'
+    | '/_authenticated/links'
+    | '/_authenticated/more'
+    | '/_authenticated/new'
+    | '/_authenticated/phrases'
+    | '/_authenticated/search'
+    | '/_authenticated/settings'
+    | '/_authenticated/templates'
     | '/_authenticated/'
+    | '/_authenticated/category/$id'
+    | '/_authenticated/conditions/$id'
+    | '/_authenticated/conditions/new'
     | '/_authenticated/entries/$id'
     | '/_authenticated/entries/new'
+    | '/_authenticated/operations/$id'
+    | '/_authenticated/operations/new'
     | '/_authenticated/procedures/$key'
+    | '/_authenticated/sub/$id'
+    | '/_authenticated/conditions/$id_/edit'
     | '/_authenticated/entries/$id_/edit'
+    | '/_authenticated/operations/$id_/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,6 +361,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLibraryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/links': {
+      id: '/_authenticated/links'
+      path: '/links'
+      fullPath: '/links'
+      preLoaderRoute: typeof AuthenticatedLinksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/more': {
+      id: '/_authenticated/more'
+      path: '/more'
+      fullPath: '/more'
+      preLoaderRoute: typeof AuthenticatedMoreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/new': {
+      id: '/_authenticated/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof AuthenticatedNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/phrases': {
+      id: '/_authenticated/phrases'
+      path: '/phrases'
+      fullPath: '/phrases'
+      preLoaderRoute: typeof AuthenticatedPhrasesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/search': {
+      id: '/_authenticated/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthenticatedSearchRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/templates': {
+      id: '/_authenticated/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AuthenticatedTemplatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/category/$id': {
+      id: '/_authenticated/category/$id'
+      path: '/category/$id'
+      fullPath: '/category/$id'
+      preLoaderRoute: typeof AuthenticatedCategoryIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conditions/$id': {
+      id: '/_authenticated/conditions/$id'
+      path: '/conditions/$id'
+      fullPath: '/conditions/$id'
+      preLoaderRoute: typeof AuthenticatedConditionsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conditions/new': {
+      id: '/_authenticated/conditions/new'
+      path: '/conditions/new'
+      fullPath: '/conditions/new'
+      preLoaderRoute: typeof AuthenticatedConditionsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/entries/$id': {
       id: '/_authenticated/entries/$id'
       path: '/entries/$id'
@@ -189,11 +445,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntriesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/operations/$id': {
+      id: '/_authenticated/operations/$id'
+      path: '/operations/$id'
+      fullPath: '/operations/$id'
+      preLoaderRoute: typeof AuthenticatedOperationsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operations/new': {
+      id: '/_authenticated/operations/new'
+      path: '/operations/new'
+      fullPath: '/operations/new'
+      preLoaderRoute: typeof AuthenticatedOperationsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/procedures/$key': {
       id: '/_authenticated/procedures/$key'
       path: '/procedures/$key'
       fullPath: '/procedures/$key'
       preLoaderRoute: typeof AuthenticatedProceduresKeyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sub/$id': {
+      id: '/_authenticated/sub/$id'
+      path: '/sub/$id'
+      fullPath: '/sub/$id'
+      preLoaderRoute: typeof AuthenticatedSubIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conditions/$id_/edit': {
+      id: '/_authenticated/conditions/$id_/edit'
+      path: '/conditions/$id/edit'
+      fullPath: '/conditions/$id/edit'
+      preLoaderRoute: typeof AuthenticatedConditionsIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/entries/$id_/edit': {
@@ -203,25 +487,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntriesIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/operations/$id_/edit': {
+      id: '/_authenticated/operations/$id_/edit'
+      path: '/operations/$id/edit'
+      fullPath: '/operations/$id/edit'
+      preLoaderRoute: typeof AuthenticatedOperationsIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRoute
+  AuthenticatedLinksRoute: typeof AuthenticatedLinksRoute
+  AuthenticatedMoreRoute: typeof AuthenticatedMoreRoute
+  AuthenticatedNewRoute: typeof AuthenticatedNewRoute
+  AuthenticatedPhrasesRoute: typeof AuthenticatedPhrasesRoute
+  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCategoryIdRoute: typeof AuthenticatedCategoryIdRoute
+  AuthenticatedConditionsIdRoute: typeof AuthenticatedConditionsIdRoute
+  AuthenticatedConditionsNewRoute: typeof AuthenticatedConditionsNewRoute
   AuthenticatedEntriesIdRoute: typeof AuthenticatedEntriesIdRoute
   AuthenticatedEntriesNewRoute: typeof AuthenticatedEntriesNewRoute
+  AuthenticatedOperationsIdRoute: typeof AuthenticatedOperationsIdRoute
+  AuthenticatedOperationsNewRoute: typeof AuthenticatedOperationsNewRoute
   AuthenticatedProceduresKeyRoute: typeof AuthenticatedProceduresKeyRoute
+  AuthenticatedSubIdRoute: typeof AuthenticatedSubIdRoute
+  AuthenticatedConditionsIdEditRoute: typeof AuthenticatedConditionsIdEditRoute
   AuthenticatedEntriesIdEditRoute: typeof AuthenticatedEntriesIdEditRoute
+  AuthenticatedOperationsIdEditRoute: typeof AuthenticatedOperationsIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLibraryRoute: AuthenticatedLibraryRoute,
+  AuthenticatedLinksRoute: AuthenticatedLinksRoute,
+  AuthenticatedMoreRoute: AuthenticatedMoreRoute,
+  AuthenticatedNewRoute: AuthenticatedNewRoute,
+  AuthenticatedPhrasesRoute: AuthenticatedPhrasesRoute,
+  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTemplatesRoute: AuthenticatedTemplatesRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCategoryIdRoute: AuthenticatedCategoryIdRoute,
+  AuthenticatedConditionsIdRoute: AuthenticatedConditionsIdRoute,
+  AuthenticatedConditionsNewRoute: AuthenticatedConditionsNewRoute,
   AuthenticatedEntriesIdRoute: AuthenticatedEntriesIdRoute,
   AuthenticatedEntriesNewRoute: AuthenticatedEntriesNewRoute,
+  AuthenticatedOperationsIdRoute: AuthenticatedOperationsIdRoute,
+  AuthenticatedOperationsNewRoute: AuthenticatedOperationsNewRoute,
   AuthenticatedProceduresKeyRoute: AuthenticatedProceduresKeyRoute,
+  AuthenticatedSubIdRoute: AuthenticatedSubIdRoute,
+  AuthenticatedConditionsIdEditRoute: AuthenticatedConditionsIdEditRoute,
   AuthenticatedEntriesIdEditRoute: AuthenticatedEntriesIdEditRoute,
+  AuthenticatedOperationsIdEditRoute: AuthenticatedOperationsIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
