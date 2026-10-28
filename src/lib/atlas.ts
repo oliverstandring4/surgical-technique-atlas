@@ -14,7 +14,9 @@ export type TableName =
   | "saved_links"
   | "conditions"
   | "operations"
-  | "preference_cards";
+  | "preference_cards"
+  | "popouts"
+  | "user_settings";
 export type Row<T extends TableName> = Tables[T]["Row"];
 export type Insert<T extends TableName> = Tables[T]["Insert"];
 
@@ -28,6 +30,8 @@ export type SavedLink = Row<"saved_links">;
 export type Condition = Row<"conditions">;
 export type Operation = Row<"operations">;
 export type PreferenceCard = Row<"preference_cards">;
+export type Popout = Row<"popouts">;
+export type UserSettings = Row<"user_settings">;
 
 export const ALL_TABLES: TableName[] = [
   "categories",
@@ -35,6 +39,8 @@ export const ALL_TABLES: TableName[] = [
   "conditions",
   "operations",
   "preference_cards",
+  "popouts",
+  "user_settings",
   "op_note_templates",
   "dot_phrases",
   "saved_links",
@@ -138,6 +144,7 @@ const ORDER: Partial<Record<TableName, { col: string; asc: boolean }>> = {
   subsections: { col: "position", asc: true },
   saved_links: { col: "position", asc: true },
   preference_cards: { col: "position", asc: true },
+  popouts: { col: "position", asc: true },
 };
 
 export function useTable<T extends TableName>(table: T) {

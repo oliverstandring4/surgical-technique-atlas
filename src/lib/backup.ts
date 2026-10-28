@@ -15,6 +15,8 @@ export const TABLE_LABELS: Record<TableName, string> = {
   conditions: "Conditions",
   operations: "Operations",
   preference_cards: "Preference cards",
+  popouts: "Pop-outs",
+  user_settings: "Settings",
   entries: "Case entries (old format)",
   op_note_templates: "Op note templates",
   dot_phrases: "Dot phrases",
@@ -147,6 +149,9 @@ export function planImport(
     subsection_id: remapSub(o["subsection_id"]),
   }));
   plan.preference_cards = tables.preference_cards ?? [];
+  plan.popouts = tables.popouts ?? [];
+  // Settings are one row per user; keep the current account's settings rather than importing.
+  plan.user_settings = [];
   plan.entries = (tables.entries ?? []).map((e) => ({
     ...e,
     category_id: remapCat(e["category_id"]),
