@@ -2,15 +2,14 @@ import { describe, expect, it } from "vitest";
 import { CONDITION_RULES, OPERATION_RULES, parseSections } from "@/lib/parse-sections";
 
 describe("parseSections", () => {
-  it("splits an operation note and keeps pearls/pitfalls sub-headings together", () => {
+  it("splits an operation note; pearls/pitfalls lines stay in the section they follow", () => {
     const r = parseSections(
       "Pre-op: CT pancreas protocol\nSetup\nSupine, arms out\nPorts & incisions: chevron\n## Key steps\n1. Kocher\nPearls: stay on SMA\nPitfalls\nRHCV bleed\nPost-op / ERAS\nPOD1 clears",
       OPERATION_RULES,
     );
     expect(r.pre_op).toBe("CT pancreas protocol");
     expect(r.setup).toBe("Supine, arms out\nchevron");
-    expect(r.intra_op).toBe("1. Kocher");
-    expect(r.pearls_pitfalls).toBe("Pearls:\nstay on SMA\n\nPitfalls:\nRHCV bleed");
+    expect(r.intra_op).toBe("1. Kocher\nPearls: stay on SMA\nPitfalls\nRHCV bleed");
     expect(r.post_op).toBe("POD1 clears");
   });
   it("splits a condition workup", () => {

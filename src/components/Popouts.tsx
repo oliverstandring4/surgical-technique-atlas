@@ -21,7 +21,6 @@ const SUGGESTIONS: Record<string, string[]> = {
   pre_op: ["Biopsy criteria", "Workup checklist", "Consent points"],
   setup: ["Port map", "Instrument list"],
   intra_op: ["Bailout options"],
-  pearls_pitfalls: ["Complications"],
   post_op: ["Orders", "Discharge instructions", "ERAS pathway"],
   history_physical: ["Risk factors"],
   labs: ["Lab panel"],

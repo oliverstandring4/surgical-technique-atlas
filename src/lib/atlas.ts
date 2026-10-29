@@ -73,7 +73,6 @@ export const OPERATION_SECTIONS = [
     hint: "Positioning, room setup, ports and incisions, equipment. Add photos or diagrams.",
   },
   { key: "intra_op", label: "Intra-op", hint: "Key steps in order" },
-  { key: "pearls_pitfalls", label: "Pearls & pitfalls", hint: "" },
   {
     key: "post_op",
     label: "Post-op / ERAS",

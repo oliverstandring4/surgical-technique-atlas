@@ -1,9 +1,7 @@
 /** Heading-based splitting of a pasted note into named sections. */
 export type SectionRule<K extends string> = { key: K; re: RegExp; keepHeading?: boolean };
 
-export const OPERATION_RULES: SectionRule<
-  "pre_op" | "setup" | "intra_op" | "pearls_pitfalls" | "post_op"
->[] = [
+export const OPERATION_RULES: SectionRule<"pre_op" | "setup" | "intra_op" | "post_op">[] = [
   {
     key: "pre_op",
     re: /^(pre[\s-]?op(erative)?(\s+(workup|plan|considerations))?|indications?|workup)$/i,
@@ -15,11 +13,6 @@ export const OPERATION_RULES: SectionRule<
   {
     key: "intra_op",
     re: /^(intra[\s-]?op(erative)?|key\s+steps?|steps|operative\s+steps|procedure|technique)$/i,
-  },
-  {
-    key: "pearls_pitfalls",
-    re: /^(pearls?|pitfalls?|pearls?\s*(\/|&|and)\s*pitfalls?|complications)$/i,
-    keepHeading: true,
   },
   {
     key: "post_op",
