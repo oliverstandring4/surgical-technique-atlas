@@ -1,10 +1,8 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# Notes for agents
+
+- This project is **no longer connected to Lovable**. Edit code directly in this repo. Ignore any `.lovable/` files or Lovable references elsewhere.
+- Hosting: Cloudflare Workers at https://my.surgicalatlas.workers.dev.
+- Backend: Supabase (auth + Postgres with row-level security). Schema changes go in `drizzle/migrations/`.
+- `.env` holds only Supabase's publishable keys, which are safe to be public. Never commit a service-role key or other secret; the repo is public.
+- The app stores surgical technique only, never patient information. Keep the PHI warnings intact.
+- Don't rewrite published git history (no force pushes, rebases, or amends of pushed commits). Keep `main` in a working state.
