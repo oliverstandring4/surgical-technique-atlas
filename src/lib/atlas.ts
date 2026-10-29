@@ -74,7 +74,7 @@ export const OPERATION_SECTIONS = [
   { key: "intra_op", label: "Intra-op", hint: "Key steps in order" },
   {
     key: "post_op",
-    label: "Post-op / ERAS",
+    label: "Post-op",
     hint: "Diet, drains, labs, VTE prophylaxis, pain, ERAS pathway, activity, discharge criteria",
   },
 ] as const;
