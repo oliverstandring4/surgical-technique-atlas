@@ -1,14 +1,10 @@
 /** Heading-based splitting of a pasted note into named sections. */
 export type SectionRule<K extends string> = { key: K; re: RegExp; keepHeading?: boolean };
 
-export const OPERATION_RULES: SectionRule<"pre_op" | "setup" | "intra_op" | "post_op">[] = [
-  {
-    key: "pre_op",
-    re: /^(pre[\s-]?op(erative)?(\s+(workup|plan|considerations))?|indications?|workup)$/i,
-  },
+export const OPERATION_RULES: SectionRule<"setup" | "intra_op" | "post_op">[] = [
   {
     key: "setup",
-    re: /^(set[\s-]?up|positioning|room set[\s-]?up|ports?(\s*(\/|&|and)\s*incisions?)?|incisions?|port placement)$/i,
+    re: /^(pre[\s-]?op(erative)?(\s*(\/|&|and)\s*set[\s-]?up|\s+(workup|plan|considerations))?|indications?|workup|set[\s-]?up|positioning|room set[\s-]?up|ports?(\s*(\/|&|and)\s*incisions?)?|incisions?|port placement)$/i,
   },
   {
     key: "intra_op",

@@ -66,10 +66,9 @@ export const CONDITION_SECTIONS = [
 ] as const;
 
 export const OPERATION_SECTIONS = [
-  { key: "pre_op", label: "Pre-op", hint: "Indications, workup, optimization, consent points" },
   {
     key: "setup",
-    label: "Setup",
+    label: "Pre-op / Setup",
     hint: "Positioning, room setup, ports and incisions, equipment. Add photos or diagrams.",
   },
   { key: "intra_op", label: "Intra-op", hint: "Key steps in order" },

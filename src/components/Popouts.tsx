@@ -18,8 +18,7 @@ export type ParentType = "operation" | "condition";
 
 /** Suggested pop-out names per section, shown as one-tap chips when adding. */
 const SUGGESTIONS: Record<string, string[]> = {
-  pre_op: ["Biopsy criteria", "Workup checklist", "Consent points"],
-  setup: ["Port map", "Instrument list"],
+  setup: ["Port map", "Instrument list", "Consent points"],
   intra_op: ["Bailout options"],
   post_op: ["Orders", "Discharge instructions", "ERAS pathway"],
   history_physical: ["Risk factors"],

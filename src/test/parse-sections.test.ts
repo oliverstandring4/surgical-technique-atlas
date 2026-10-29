@@ -7,8 +7,7 @@ describe("parseSections", () => {
       "Pre-op: CT pancreas protocol\nSetup\nSupine, arms out\nPorts & incisions: chevron\n## Key steps\n1. Kocher\nPearls: stay on SMA\nPitfalls\nRHCV bleed\nPost-op / ERAS\nPOD1 clears",
       OPERATION_RULES,
     );
-    expect(r.pre_op).toBe("CT pancreas protocol");
-    expect(r.setup).toBe("Supine, arms out\nchevron");
+    expect(r.setup).toBe("CT pancreas protocol\nSupine, arms out\nchevron");
     expect(r.intra_op).toBe("1. Kocher\nPearls: stay on SMA\nPitfalls\nRHCV bleed");
     expect(r.post_op).toBe("POD1 clears");
   });
