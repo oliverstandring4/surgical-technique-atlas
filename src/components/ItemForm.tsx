@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ClipboardPaste, ShieldAlert } from "lucide-react";
+import { ArrowLeft, ClipboardPaste, Copy, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import {
   APPROACHES,
@@ -14,7 +14,7 @@ import {
 import { findPhi, type PhiWarning } from "@/lib/phi-check";
 import { CONDITION_RULES, OPERATION_RULES, parseSections } from "@/lib/parse-sections";
 import { plainToHtml } from "@/lib/parse-note";
-import { RichEditor } from "./RichEditor";
+import { RichEditor, RichView } from "./RichEditor";
 import { Field } from "./atlas-ui";
 import { Button } from "@/components/ui/button";
 import {
@@ -100,6 +100,7 @@ export function ItemForm({
   const [pasteText, setPasteText] = useState("");
   const [warnings, setWarnings] = useState<PhiWarning[] | null>(null);
   const [condFilter, setCondFilter] = useState("");
+  const [copyTarget, setCopyTarget] = useState<{ key: string; label: string } | null>(null);
 
   const subs = subsections.filter((s) => s.category_id === d.category_id);
   const titles = [...new Set(peers.map((p) => p.title))];
@@ -278,7 +279,16 @@ export function ItemForm({
         </div>
         {secs.map((s) => (
           <div key={s.key}>
-            <h3 className="text-base">{s.label}</h3>
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-base">{s.label}</h3>
+              <button
+                type="button"
+                onClick={() => setCopyTarget({ key: s.key, label: s.label })}
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <Copy size={13} /> Copy from…
+              </button>
+            </div>
             {s.hint && <p className="mb-1.5 text-xs text-muted-foreground">{s.hint}</p>}
             <div className={s.hint ? "" : "mt-1.5"}>
               <RichEditor
@@ -353,6 +363,24 @@ export function ItemForm({
         </Button>
       </div>
 
+      <CopyFromDialog
+        target={copyTarget}
+        sources={peers
+          .filter((p) => p.id !== d.id)
+          .map((p) => ({ id: p.id, title: p.title, rec: p as unknown as Record<string, unknown> }))}
+        sections={secs}
+        hasContent={!!copyTarget && !!d.sections[copyTarget.key]}
+        onClose={() => setCopyTarget(null)}
+        onApply={(html, mode) => {
+          if (!copyTarget) return;
+          const cur = d.sections[copyTarget.key] ?? "";
+          setSection(copyTarget.key, mode === "append" && cur ? cur + html : html);
+          setEditorKey((k) => k + 1);
+          setCopyTarget(null);
+          toast.success(`Copied into ${copyTarget.label}`);
+        }}
+      />
+
       <Dialog open={pasteOpen} onOpenChange={setPasteOpen}>
         <DialogContent>
           <DialogHeader>
@@ -414,5 +442,117 @@ export function ItemForm({
         </DialogContent>
       </Dialog>
     </form>
+  );
+}
+
+type CopySource = { id: string; title: string; rec: Record<string, unknown> };
+
+/** Pick another operation's (or condition's) section and copy its content into this one. */
+function CopyFromDialog({
+  target,
+  sources,
+  sections,
+  hasContent,
+  onClose,
+  onApply,
+}: {
+  target: { key: string; label: string } | null;
+  sources: CopySource[];
+  sections: readonly { key: string; label: string }[];
+  hasContent: boolean;
+  onClose: () => void;
+  onApply: (html: string, mode: "replace" | "append") => void;
+}) {
+  const [q, setQ] = useState("");
+  const [picked, setPicked] = useState<{ title: string; label: string; html: string } | null>(null);
+  const [openFor, setOpenFor] = useState(target);
+  if (target !== openFor) {
+    setOpenFor(target);
+    setQ("");
+    setPicked(null);
+  }
+
+  const ql = q.trim().toLowerCase();
+  const options = sources
+    .flatMap((src) =>
+      sections.map((sec) => ({
+        id: `${src.id}-${sec.key}`,
+        title: src.title,
+        label: sec.label,
+        same: sec.key === target?.key,
+        html: (src.rec[sec.key] as string | undefined) ?? "",
+      })),
+    )
+    .filter((o) => o.html && (!ql || `${o.title} ${o.label}`.toLowerCase().includes(ql)))
+    .sort((a, b) => Number(b.same) - Number(a.same) || a.title.localeCompare(b.title));
+
+  return (
+    <Dialog open={!!target} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="font-serif text-2xl font-medium">
+            Copy into {target?.label}
+          </DialogTitle>
+          <DialogDescription>
+            {picked
+              ? `From ${picked.title} · ${picked.label}`
+              : "Pick a section to copy. Edits afterward won't affect the original."}
+          </DialogDescription>
+        </DialogHeader>
+        {picked ? (
+          <>
+            <div className="max-h-[50vh] overflow-y-auto rounded-md border border-border px-3 py-2">
+              <RichView html={picked.html} />
+            </div>
+            <DialogFooter className="flex-row flex-wrap gap-2">
+              <Button type="button" variant="ghost" onClick={() => setPicked(null)}>
+                <ArrowLeft /> Back
+              </Button>
+              {hasContent && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onApply(picked.html, "append")}
+                >
+                  Add below current
+                </Button>
+              )}
+              <Button type="button" onClick={() => onApply(picked.html, "replace")}>
+                {hasContent ? "Replace current" : "Copy in"}
+              </Button>
+            </DialogFooter>
+          </>
+        ) : (
+          <>
+            <input
+              className="field"
+              placeholder="Search, e.g. thyroid intra-op"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              autoFocus
+            />
+            <ul className="max-h-[50vh] overflow-y-auto rounded-md border border-border">
+              {options.length === 0 && (
+                <li className="px-3 py-2 text-sm text-muted-foreground">
+                  Nothing to copy yet{ql ? " for that search" : ""}.
+                </li>
+              )}
+              {options.map((o) => (
+                <li key={o.id}>
+                  <button
+                    type="button"
+                    onClick={() => setPicked(o)}
+                    className="flex w-full items-baseline justify-between gap-3 px-3 py-2.5 text-left text-sm hover:bg-accent/50"
+                  >
+                    <span className="truncate">{o.title}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{o.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
